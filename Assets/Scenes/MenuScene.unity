@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 127739788}
   - component: {fileID: 127739790}
   - component: {fileID: 127739789}
+  - component: {fileID: 127739791}
   m_Layer: 5
   m_Name: MenuContainer
   m_TagString: Untagged
@@ -336,6 +337,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127739787}
   m_CullTransparentMesh: 1
+--- !u!114 &127739791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127739787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24c87752bb8a4f9575d6b4c597014, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hostBtn: {fileID: 1069028462}
+  _clientBtn: {fileID: 1561944614}
+  _exitBtn: {fileID: 692884141}
+  _connectPanel: {fileID: 1729659100}
 --- !u!1 &285441310
 GameObject:
   m_ObjectHideFlags: 0
@@ -2593,9 +2610,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1729659095}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!114 &1729659100
 MonoBehaviour:
