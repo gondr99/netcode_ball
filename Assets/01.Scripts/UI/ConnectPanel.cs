@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System;
 using UnityEngine.SceneManagement;
+using System.Net.Sockets;
+using System.Net;
 
 public class ConnectPanel : MonoBehaviour
 {
@@ -18,7 +20,7 @@ public class ConnectPanel : MonoBehaviour
 
     [SerializeField] private TMP_InputField _tmpIpInput, _tmpPortInput;
     [SerializeField] private Button _tmpConnectBtn, _tmpCloseBtn;
-
+    [SerializeField] private ushort _defaultPort = 8989;
     private CanvasGroup _canvasGroup;
     private PanelRole _role;
 
@@ -33,6 +35,10 @@ public class ConnectPanel : MonoBehaviour
     public void OpenPanel(PanelRole role)
     {
         _role = role;
+        string ip = FindIPAddress();
+
+        _tmpIpInput.text = string.IsNullOrEmpty(ip) ? "127.0.0.1" : ip;
+        _tmpPortInput.text = _defaultPort.ToString();
         SetActive(true);
     }
 
@@ -42,13 +48,11 @@ public class ConnectPanel : MonoBehaviour
         {
             if(_role == PanelRole.Host)
             {
-                NetworkManager.Singleton.StartHost();
-                NetworkManager.Singleton.SceneManager.LoadScene(
-                    SceneNames.Select, LoadSceneMode.Single);
+                AppHost.Instance.StartHost();
             }
             else if(_role == PanelRole.Client)
             {
-                NetworkManager.Singleton.StartClient();
+                AppClient.Instance.StartClient();
             }
         }
     }
@@ -84,6 +88,26 @@ public class ConnectPanel : MonoBehaviour
             (ushort)int.Parse(port)
         );
         return true;
+    }
+
+    private string FindIPAddress()
+    {
+        var host = Dns.GetHostEntry(Dns.GetHostName());
+        try
+        {
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+
+        }catch(Exception ex)
+        {
+            Debug.LogWarning(ex.Message);
+        }
+        return null;
     }
 
 }
