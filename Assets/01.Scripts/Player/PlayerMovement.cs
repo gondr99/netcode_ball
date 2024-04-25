@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -9,15 +10,31 @@ public class PlayerMovement : MonoBehaviour
 
 
     public bool IsGround { get; private set; }
+    private float _xMove;
+    private Player _player;
 
-    private void Awake()
+    public void Initialize(Player player)
     {
+        _player = player;
         RbCompo = GetComponent<Rigidbody2D>();
+    }
+
+    public void SetXMove(float xMove)
+    {
+        _xMove = xMove;
     }
 
     private void FixedUpdate()
     {
         IsGround = CheckGrounded();
+        HorizontalMove();
+    }
+
+    private void HorizontalMove()
+    {
+        float xVelocity = _xMove * _player.Data.moveSpeed;
+        Debug.Log(xVelocity);
+        RbCompo.velocity = new Vector2(xVelocity, RbCompo.velocity.y);
     }
 
     public bool CheckGrounded()
@@ -27,12 +44,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    #region velocity control
-    public void SetVelocity(float x, float y)
-    {
-        RbCompo.velocity = new Vector2(x, y);
-    }
-
     public void StopImmediately(bool withYAxis)
     {
         if (withYAxis)
@@ -40,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
         else
             RbCompo.velocity = new Vector2(0, RbCompo.velocity.y);
     }
-    #endregion
+    
 
     private void OnDrawGizmosSelected()
     {
