@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -23,9 +24,12 @@ public class Player : NetworkBehaviour
 
     private PlayerStateMachine stateMachine;
 
+    private NetworkVariable<int> _selectCharacterIndex;
 
     private void Awake()
     {
+        _selectCharacterIndex = new NetworkVariable<int>(0);
+
         PlayerInput = GetComponent<PlayerInput>();
         MovementCompo = GetComponent<PlayerMovement>();
         MovementCompo.Initialize(this);
@@ -49,6 +53,8 @@ public class Player : NetworkBehaviour
         {
             PlayerInput.OnFireKeyEvent += HandleFireKeyEvent;
         }
+
+        _selectCharacterIndex.OnValueChanged += HandleCharacterChanged;
     }
 
     public override void OnNetworkDespawn()
@@ -57,6 +63,12 @@ public class Player : NetworkBehaviour
         {
             PlayerInput.OnFireKeyEvent -= HandleFireKeyEvent;
         }
+        _selectCharacterIndex.OnValueChanged -= HandleCharacterChanged;
+    }
+
+    private void HandleCharacterChanged(int previousValue, int newValue)
+    {
+        
     }
 
     private void HandleFireKeyEvent()
