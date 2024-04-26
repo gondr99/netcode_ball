@@ -93,6 +93,19 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -148,7 +161,7 @@ TextureImporter:
         height: 96
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 8, y: 8, z: 8, w: 8}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -622,7 +635,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spritesheet_UI_Flat_25
+      name: BlueBtn
       rect:
         serializedVersion: 2
         x: 416
@@ -631,7 +644,7 @@ TextureImporter:
         height: 12
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 2, y: 3, z: 2, w: 3}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -643,7 +656,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spritesheet_UI_Flat_26
+      name: RedBtn
       rect:
         serializedVersion: 2
         x: 480
@@ -652,7 +665,7 @@ TextureImporter:
         height: 12
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 2, y: 3, z: 2, w: 3}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1262,7 +1275,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      BlueBtn: 1587513914
       NoteBackground: -471178194
+      RedBtn: 1622917052
       SelectFrame: -231619819
       Spritesheet_UI_Flat_0: 1059972874
       Spritesheet_UI_Flat_1: -411939125
@@ -1281,8 +1296,6 @@ TextureImporter:
       Spritesheet_UI_Flat_22: 137135697
       Spritesheet_UI_Flat_23: 588714391
       Spritesheet_UI_Flat_24: 366139162
-      Spritesheet_UI_Flat_25: 1587513914
-      Spritesheet_UI_Flat_26: 1622917052
       Spritesheet_UI_Flat_28: -210093794
       Spritesheet_UI_Flat_29: -33568147
       Spritesheet_UI_Flat_3: 960424701

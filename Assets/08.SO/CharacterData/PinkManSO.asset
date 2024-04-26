@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idleSprite: {fileID: 1110302701, guid: b606432835efc2348a4c1e7b591eea88, type: 3}
   charName: PinkMan
-  _spriteSet: {fileID: 7108339969198208228, guid: 1aabc6508f2fc4446a4a1778c5e0bca6, type: 3}
+  spriteSet: {fileID: 7108339969198208228, guid: 1aabc6508f2fc4446a4a1778c5e0bca6, type: 3}
   characterIndex: 2
   moveSpeed: 5
   jumpPower: 4

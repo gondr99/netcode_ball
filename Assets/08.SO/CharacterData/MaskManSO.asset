@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idleSprite: {fileID: 1510657869, guid: fccbd107b788f9843a05c1ae31c699c1, type: 3}
   charName: MaskMan
-  _spriteSet: {fileID: 7108339969198208228, guid: b1720037750a8e24bac148a9798cc838, type: 3}
+  spriteSet: {fileID: 7108339969198208228, guid: b1720037750a8e24bac148a9798cc838, type: 3}
   characterIndex: 0
   moveSpeed: 6
   jumpPower: 5

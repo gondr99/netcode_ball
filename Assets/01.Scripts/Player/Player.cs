@@ -1,6 +1,9 @@
 using System;
+using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 public enum PlayerStateEnum
 {
@@ -19,21 +22,30 @@ public class Player : NetworkBehaviour
     public PlayerMovement MovementCompo { get; private set; }
     public Animator AnimCompo { get; private set; }
 
-    public bool canStateChangeable = true;
+    [HideInInspector] public bool canStateChangeable = true;
     public bool isDead;
 
     private PlayerStateMachine stateMachine;
 
-    private NetworkVariable<int> _selectCharacterIndex;
+    [HideInInspector] public NetworkVariable<int> selectCharacterIndex;
+    [HideInInspector] public NetworkVariable<FixedString64Bytes> userName;
+    [HideInInspector] public NetworkVariable<bool> isReady;
+
+    private SpriteLibrary _spriteLib;
+    private Transform _visualTrm;
 
     private void Awake()
     {
-        _selectCharacterIndex = new NetworkVariable<int>(0);
+        selectCharacterIndex = new NetworkVariable<int>(0);
+        userName = new NetworkVariable<FixedString64Bytes>();
+        isReady = new NetworkVariable<bool>(false);
 
         PlayerInput = GetComponent<PlayerInput>();
         MovementCompo = GetComponent<PlayerMovement>();
         MovementCompo.Initialize(this);
-        AnimCompo = transform.Find("Visual").GetComponent<Animator>();
+        _visualTrm = transform.Find("Visual");
+        AnimCompo = _visualTrm.GetComponent<Animator>();
+        _spriteLib = _visualTrm.GetComponent<SpriteLibrary>();
 
         stateMachine = new PlayerStateMachine();
 
@@ -52,9 +64,16 @@ public class Player : NetworkBehaviour
         if (IsOwner)
         {
             PlayerInput.OnFireKeyEvent += HandleFireKeyEvent;
+            GameManager.Instance.ActivePlayer = this;
         }
 
-        _selectCharacterIndex.OnValueChanged += HandleCharacterChanged;
+        if(IsServer)
+        {
+            UserData data =  AppHost.Instance.NetServer.GetUserData(OwnerClientId);
+            userName.Value = data.playerName;
+        }
+
+        selectCharacterIndex.OnValueChanged += HandleCharacterChanged;
     }
 
     public override void OnNetworkDespawn()
@@ -62,13 +81,17 @@ public class Player : NetworkBehaviour
         if (IsOwner)
         {
             PlayerInput.OnFireKeyEvent -= HandleFireKeyEvent;
+            GameManager.Instance.ActivePlayer = null;
         }
-        _selectCharacterIndex.OnValueChanged -= HandleCharacterChanged;
+        selectCharacterIndex.OnValueChanged -= HandleCharacterChanged;
     }
+
+    
 
     private void HandleCharacterChanged(int previousValue, int newValue)
     {
-        
+        Data = GameManager.Instance.GetCharDataByIndex(newValue);
+        _spriteLib.spriteLibraryAsset = Data.spriteSet;
     }
 
     private void HandleFireKeyEvent()
@@ -79,18 +102,18 @@ public class Player : NetworkBehaviour
     #region Flip Character
     public bool IsFacingRight()
     {
-        return Mathf.Approximately(transform.eulerAngles.y, 0);
+        return Mathf.Approximately(_visualTrm.eulerAngles.y, 0);
     }
 
     public void HandleSpriteFlip(Vector3 targetPosition)
     {
         if (targetPosition.x < transform.position.x)
         {
-            transform.eulerAngles = new Vector3(0f, -180f, 0f);
+            _visualTrm.eulerAngles = new Vector3(0f, -180f, 0f);
         }
         else
         {
-            transform.eulerAngles = new Vector3(0f, 0f, 0f);
+            _visualTrm.eulerAngles = new Vector3(0f, 0f, 0f);
         }
     }
     #endregion
@@ -105,5 +128,11 @@ public class Player : NetworkBehaviour
         HandleSpriteFlip(mousePos);
     }
 
+
+    [ServerRpc]
+    public void SelectCharacterServerRpc(int index)
+    {
+        GameManager.Instance.SelectCharacter(index, OwnerClientId);
+    }
 }
 

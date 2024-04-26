@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idleSprite: {fileID: -1364588354, guid: 04b743ae1547bf74c84a6d1b4faa6b42, type: 3}
   charName: NinjaFrog
-  _spriteSet: {fileID: 7108339969198208228, guid: 5f96aea903d8ee94599721f437c34a69, type: 3}
+  spriteSet: {fileID: 7108339969198208228, guid: 5f96aea903d8ee94599721f437c34a69, type: 3}
   characterIndex: 1
   moveSpeed: 8
   jumpPower: 6

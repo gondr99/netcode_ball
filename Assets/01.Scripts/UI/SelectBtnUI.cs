@@ -1,5 +1,7 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SelectBtnUI : MonoBehaviour
@@ -9,15 +11,26 @@ public class SelectBtnUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _nameText;
     private Button _selectBtn;
 
+    public event Action<SelectBtnUI> OnSelectedEvent;
+    public Image selectImage;
+    public CharDataSO DataSO => _dataSO;
+
     private void Awake()
     {
         _selectBtn = GetComponent<Button>();
         _selectBtn.onClick.AddListener(HandleCharacterSelect);
+        selectImage = transform.Find("SelectFrame").GetComponent<Image>();
     }
 
     private void HandleCharacterSelect()
     {
+        //Player status is ready! so fixed
+        if (GameManager.Instance.ActivePlayer.isReady.Value) return;
 
+
+        OnSelectedEvent?.Invoke(this);
+        EventSystem.current.SetSelectedGameObject(null);
+        GameManager.Instance.ActivePlayer.SelectCharacterServerRpc(_dataSO.characterIndex);
     }
 
     private void OnValidate()

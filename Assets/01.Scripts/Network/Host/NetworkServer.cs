@@ -45,9 +45,19 @@ public class NetworkServer : IDisposable
         DelayedSpawnPlayer(data.clientID);
     }
 
+    public UserData GetUserData(ulong clientID)
+    {
+        return _userDictionary[clientID];
+    }
+
+    public void SetUserData(ulong clientID, UserData data)
+    {
+        _userDictionary[clientID] = data;
+    }
+
     private async void DelayedSpawnPlayer(ulong clientID)
     {
-        await Task.Delay(100); //0.1s delay
+        await Task.Delay(200); //wait for gamemanager
         GameManager.Instance.SpawnPlayerInSelectScene(clientID);
     }
 
