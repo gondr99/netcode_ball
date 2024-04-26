@@ -33,7 +33,6 @@ public class PlayerMovement : MonoBehaviour
     private void HorizontalMove()
     {
         float xVelocity = _xMove * _player.Data.moveSpeed;
-        Debug.Log(xVelocity);
         RbCompo.velocity = new Vector2(xVelocity, RbCompo.velocity.y);
     }
 
@@ -41,6 +40,12 @@ public class PlayerMovement : MonoBehaviour
     {
         Collider2D collider = Physics2D.OverlapBox(_groundCheckerTrm.position, _groundCheckerSize, 0, _whatIsGround);
         return collider;
+    }
+
+    public void Jump()
+    {
+        StopImmediately(true);
+        RbCompo.AddForce( new Vector2(0, _player.Data.jumpPower), ForceMode2D.Impulse);
     }
 
 

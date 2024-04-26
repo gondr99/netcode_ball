@@ -106,7 +106,7 @@ TextureImporter:
         height: 96
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 8, y: 8, z: 8, w: 8}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1000,7 +1000,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spritesheet_UI_Flat_43
+      name: NoteBackground
       rect:
         serializedVersion: 2
         x: 544
@@ -1009,7 +1009,7 @@ TextureImporter:
         height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 10, y: 5, z: 10, w: 5}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1021,7 +1021,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spritesheet_UI_Flat_44
+      name: whte_btn
       rect:
         serializedVersion: 2
         x: 640
@@ -1030,7 +1030,7 @@ TextureImporter:
         height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 8, y: 12, z: 8, w: 5}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1084,7 +1084,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spritesheet_UI_Flat_46
+      name: SelectFrame
       rect:
         serializedVersion: 2
         x: 416
@@ -1093,7 +1093,7 @@ TextureImporter:
         height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 8, y: 8, z: 8, w: 8}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1262,6 +1262,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      NoteBackground: -471178194
+      SelectFrame: -231619819
       Spritesheet_UI_Flat_0: 1059972874
       Spritesheet_UI_Flat_1: -411939125
       Spritesheet_UI_Flat_10: 1245387628
@@ -1296,10 +1298,7 @@ TextureImporter:
       Spritesheet_UI_Flat_4: 1790259677
       Spritesheet_UI_Flat_41: -1437786969
       Spritesheet_UI_Flat_42: -404825933
-      Spritesheet_UI_Flat_43: -471178194
-      Spritesheet_UI_Flat_44: -42979331
       Spritesheet_UI_Flat_45: -1155697741
-      Spritesheet_UI_Flat_46: -231619819
       Spritesheet_UI_Flat_47: 791356844
       Spritesheet_UI_Flat_48: 485811588
       Spritesheet_UI_Flat_49: 583434790
@@ -1316,6 +1315,7 @@ TextureImporter:
       ok: 867215941
       red_btn: 1138173531
       title_background: -586943863
+      whte_btn: -42979331
       yellow_btn: -1539127381
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

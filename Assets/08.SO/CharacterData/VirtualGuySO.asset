@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c64fc7c746b63f438975ce22bd44476, type: 3}
   m_Name: VirtualGuySO
   m_EditorClassIdentifier: 
+  idleSprite: {fileID: -1453233831, guid: 43d9c686af1f50f4db602457c603aae4, type: 3}
   charName: VirtualGuy
   _spriteSet: {fileID: 7108339969198208228, guid: 066957135942fe242b50d2d3de415d31, type: 3}
   characterIndex: 3
   moveSpeed: 6
+  jumpPower: 5
+  jumpCount: 2

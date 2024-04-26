@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Netcode;
 
 public class NetworkServer : IDisposable
@@ -40,6 +41,14 @@ public class NetworkServer : IDisposable
 
         res.CreatePlayerObject = false;
         res.Approved = true;
+
+        DelayedSpawnPlayer(data.clientID);
+    }
+
+    private async void DelayedSpawnPlayer(ulong clientID)
+    {
+        await Task.Delay(100); //0.1s delay
+        GameManager.Instance.SpawnPlayerInSelectScene(clientID);
     }
 
     private void HandleServerStarted()
