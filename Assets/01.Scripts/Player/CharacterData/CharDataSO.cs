@@ -19,6 +19,8 @@ public class CharDataSO : ScriptableObject
     public float throwPower = 10;
     public Projectile projectilePrefab;
 
+    public int maxHealth = 80;
+
 
     public string GetInfoString()
     {
@@ -32,6 +34,8 @@ public class CharDataSO : ScriptableObject
         builder.Append($"Damage     : {damage}");
         builder.AppendLine();
         builder.Append($"Throw Power: {throwPower}");
+        builder.AppendLine();
+        builder.Append($"Max Health : {maxHealth}");
 
         return builder.ToString();
     }

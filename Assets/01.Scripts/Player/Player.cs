@@ -23,6 +23,7 @@ public class Player : NetworkBehaviour
     public Animator AnimCompo { get; private set; }
     public ProjectileLauncher LauncherCompo { get; private set; }
     public Collider2D ColliderCompo { get; private set; }
+    public Health HealthCompo { get; private set; }
 
     [HideInInspector] public bool canStateChangeable = true;
     public bool isDead;
@@ -33,8 +34,11 @@ public class Player : NetworkBehaviour
     [HideInInspector] public NetworkVariable<FixedString64Bytes> userName;
     [HideInInspector] public NetworkVariable<bool> isReady;
 
+    [HideInInspector] public Vector2 knockBackPower;
+
     private SpriteLibrary _spriteLib;
     private Transform _visualTrm;
+
 
     private void Awake()
     {
@@ -46,6 +50,7 @@ public class Player : NetworkBehaviour
         MovementCompo = GetComponent<PlayerMovement>();
         MovementCompo.Initialize(this);
         ColliderCompo = GetComponent<Collider2D>();
+        HealthCompo = GetComponent<Health>();
 
         _visualTrm = transform.Find("Visual");
         AnimCompo = _visualTrm.GetComponent<Animator>();
@@ -59,11 +64,19 @@ public class Player : NetworkBehaviour
         stateMachine.AddState(PlayerStateEnum.Idle, new PlayerIdleState(this, stateMachine, "Idle"));
         stateMachine.AddState(PlayerStateEnum.Run, new PlayerRunState(this, stateMachine, "Run"));
         stateMachine.AddState(PlayerStateEnum.Air, new PlayerAirState(this, stateMachine, "Air"));
+        stateMachine.AddState(PlayerStateEnum.Hit, new PlayerHitState(this, stateMachine, "Hit"));
     }
 
     private void Start()
     {
         stateMachine.InitState(PlayerStateEnum.Idle, this);
+    }
+
+    public void SetHit(Vector2 knockBackPower)
+    {
+        this.knockBackPower = knockBackPower;
+        LauncherCompo.CancelCharge();
+        stateMachine.ChangeState(PlayerStateEnum.Hit);
     }
 
     public override void OnNetworkSpawn()
@@ -103,6 +116,8 @@ public class Player : NetworkBehaviour
 
     private void HandleFireKeyEvent(bool isDown)
     {
+        if (MovementCompo.isKnockBack) return;
+
         LauncherCompo.SetCharge(isDown);
     }
 
@@ -128,6 +143,8 @@ public class Player : NetworkBehaviour
     private void Update()
     {
         if (!IsOwner) return;
+
+        if (MovementCompo.isKnockBack) return; //in knockback state, return
 
         stateMachine.currentState.Update();
 

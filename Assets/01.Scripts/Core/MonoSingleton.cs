@@ -3,7 +3,7 @@ using UnityEngine;
 public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
 {
     private static T _instance = null;
-    private static bool IsDestoryed = false;
+    protected static bool IsDestoryed = false;
 
     public static T Instance
     {

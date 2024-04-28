@@ -1,6 +1,7 @@
 using System.Globalization;
 using Unity.Netcode;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class ProjectileLauncher : NetworkBehaviour
 {
@@ -24,6 +25,13 @@ public class ProjectileLauncher : NetworkBehaviour
     public void Initialize(Player player)
     {
         _player = player;
+    }
+
+    public void CancelCharge()
+    {
+        _isCharging = false;
+        _arrowSprite.enabled = false;
+        _currentPower = 0;
     }
 
     public void SetCharge(bool value)

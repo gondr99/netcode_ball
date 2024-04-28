@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -15,11 +17,12 @@ public class GameManager : MonoSingleton<GameManager>
     public event Action<Player> OnActivePlayerSetEvent;
 
     private Player _activePlayer;//currently active player object
-    public Player ActivePlayer {
+    public Player ActivePlayer
+    {
         get => _activePlayer;
         set
         {
-            if(_activePlayer != value)
+            if (_activePlayer != value)
             {
                 _activePlayer = value;
                 OnActivePlayerSetEvent?.Invoke(_activePlayer);
@@ -33,6 +36,12 @@ public class GameManager : MonoSingleton<GameManager>
     private void Awake()
     {
         playerDictionary = new Dictionary<ulong, Player>();
+        NetworkManager.Singleton.SceneManager.OnLoadComplete += HandleSceneLoadComplete;
+    }
+
+    private void OnDestroy()
+    {
+        NetworkManager.Singleton.SceneManager.OnLoadComplete -= HandleSceneLoadComplete;
     }
 
     public void SpawnPlayerInSelectScene(ulong clientID)
@@ -48,7 +57,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         //Set network variable by server
         playerDictionary[clientID].selectCharacterIndex.Value = index;
-        UserData data =  AppHost.Instance.NetServer.GetUserData(clientID);
+        UserData data = AppHost.Instance.NetServer.GetUserData(clientID);
         data.characterIndex = index;
         AppHost.Instance.NetServer.SetUserData(clientID, data);
     }
@@ -63,8 +72,45 @@ public class GameManager : MonoSingleton<GameManager>
         data.playerName = userName;
         AppHost.Instance.NetServer.SetUserData(clientID, data);
 
-        return playerDictionary.Count == 2 
-            && playerDictionary.Values.Any(p => p.isReady.Value == false) == false ;
+        return playerDictionary.Count == 2
+            && playerDictionary.Values.Any(p => p.isReady.Value == false) == false;
+    }
+
+
+    public void StartGame()
+    {
+        DontDestroyOnLoad(gameObject);
+        NetworkManager.Singleton.SceneManager.LoadScene(SceneNames.Game, UnityEngine.SceneManagement.LoadSceneMode.Single);
+    }
+
+    private void HandleSceneLoadComplete(ulong clientId, string sceneName, LoadSceneMode mode)
+    {
+        ulong serverID = NetworkManager.Singleton.LocalClientId;
+        if (sceneName == SceneNames.Game && clientId == serverID)
+        {
+            MovePlayerInGameScene();
+        }
+    }
+
+    public void MovePlayerInGameScene()
+    {
+        GameSpawnPoints SpawnPoints = GameObject.FindObjectOfType<GameSpawnPoints>();
+        Vector3[] positions = SpawnPoints.GetPositions();
+        int index = 0;
+        foreach(Player p in playerDictionary.Values)
+        {
+            p.HealthCompo.ResetHealth();
+            p.transform.position = positions[index];
+            index++;
+        }
+
+    }
+
+    public void GoToSelectScene()
+    {
+        //if goto the other scene then destroy gameobject
+        IsDestoryed = true;
+        Destroy(gameObject);
     }
 
     #endregion

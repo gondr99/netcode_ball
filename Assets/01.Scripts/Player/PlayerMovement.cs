@@ -13,6 +13,13 @@ public class PlayerMovement : MonoBehaviour
     private float _xMove;
     private Player _player;
 
+    public bool isKnockBack = false;
+
+    public void SetKnockBack(bool value)
+    {
+        isKnockBack = value;
+    }
+
     public void Initialize(Player player)
     {
         _player = player;
@@ -26,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isKnockBack) return;
+
         IsGround = CheckGrounded();
         HorizontalMove();
     }

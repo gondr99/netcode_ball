@@ -28,7 +28,19 @@ public class ReadyPanel : NetworkBehaviour
         HandleSetActivePlayer(GameManager.Instance.ActivePlayer);
 
         _readyBtn.onClick.AddListener(HandleReadyBtnClick);
+
+        if(IsHost)
+        {
+            _startBtn.onClick.AddListener(HandleGameStartClick);
+        }
     }
+
+    #region Server only area
+    private void HandleGameStartClick()
+    {
+        GameManager.Instance.StartGame();
+    }
+    #endregion
 
     //after active player set, ready button will be enabled!
     private void HandleSetActivePlayer(Player player)

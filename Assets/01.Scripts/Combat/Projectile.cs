@@ -48,6 +48,10 @@ public class Projectile : MonoBehaviour
     {
         if(_role == ProjectileRole.Server)
         {
+            if(collision.gameObject.TryGetComponent(out Health health))
+            {
+                health.TakeDamage(_damage, collision.contacts[0].normal, 2f);
+            }
             //server projectile will make real damage to health logic        
             //and add force to ball
         }
