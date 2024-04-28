@@ -57,7 +57,12 @@ public class NetworkServer : IDisposable
 
     private async void DelayedSpawnPlayer(ulong clientID)
     {
-        await Task.Delay(200); //wait for gamemanager
+        //init time, server load networkserver first
+        while(true)
+        {
+            await Task.Delay(100);
+            if (GameManager.Instance != null) break;
+        }
         GameManager.Instance.SpawnPlayerInSelectScene(clientID);
     }
 

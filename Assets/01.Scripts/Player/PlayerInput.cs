@@ -5,7 +5,7 @@ public class PlayerInput : MonoBehaviour
 {
     public float XMove { get; private set; }
     public Vector2 MousePosition { get; private set; }
-    public event Action OnFireKeyEvent;
+    public event Action<bool> OnFireKeyEvent;
     public event Action OnJumpKeyEvent;
 
     void Update()
@@ -32,7 +32,11 @@ public class PlayerInput : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            OnFireKeyEvent?.Invoke();
+            OnFireKeyEvent?.Invoke(true);
+        }
+        if(Input.GetMouseButtonUp(0))
+        {
+            OnFireKeyEvent?.Invoke(false);
         }
 
         MousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);

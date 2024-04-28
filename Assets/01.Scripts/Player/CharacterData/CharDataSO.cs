@@ -15,6 +15,10 @@ public class CharDataSO : ScriptableObject
     public float jumpPower = 10;
     public int jumpCount = 2;
 
+    public int damage = 10;
+    public float throwPower = 10;
+    public Projectile projectilePrefab;
+
 
     public string GetInfoString()
     {
@@ -24,6 +28,10 @@ public class CharDataSO : ScriptableObject
         builder.Append($"Jump Power : {jumpPower}");
         builder.AppendLine();
         builder.Append($"Jump Count : {jumpCount}");
+        builder.AppendLine();
+        builder.Append($"Damage     : {damage}");
+        builder.AppendLine();
+        builder.Append($"Throw Power: {throwPower}");
 
         return builder.ToString();
     }

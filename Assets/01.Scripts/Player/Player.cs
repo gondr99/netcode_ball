@@ -21,6 +21,8 @@ public class Player : NetworkBehaviour
 
     public PlayerMovement MovementCompo { get; private set; }
     public Animator AnimCompo { get; private set; }
+    public ProjectileLauncher LauncherCompo { get; private set; }
+    public Collider2D ColliderCompo { get; private set; }
 
     [HideInInspector] public bool canStateChangeable = true;
     public bool isDead;
@@ -43,9 +45,14 @@ public class Player : NetworkBehaviour
         PlayerInput = GetComponent<PlayerInput>();
         MovementCompo = GetComponent<PlayerMovement>();
         MovementCompo.Initialize(this);
+        ColliderCompo = GetComponent<Collider2D>();
+
         _visualTrm = transform.Find("Visual");
         AnimCompo = _visualTrm.GetComponent<Animator>();
         _spriteLib = _visualTrm.GetComponent<SpriteLibrary>();
+
+        LauncherCompo = transform.Find("ArrowParent").GetComponent<ProjectileLauncher>();
+        LauncherCompo.Initialize(this);
 
         stateMachine = new PlayerStateMachine();
 
@@ -94,9 +101,9 @@ public class Player : NetworkBehaviour
         _spriteLib.spriteLibraryAsset = Data.spriteSet;
     }
 
-    private void HandleFireKeyEvent()
+    private void HandleFireKeyEvent(bool isDown)
     {
-
+        LauncherCompo.SetCharge(isDown);
     }
 
     #region Flip Character

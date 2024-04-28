@@ -19,3 +19,5 @@ MonoBehaviour:
   moveSpeed: 6
   jumpPower: 5
   jumpCount: 2
+  damage: 10
+  projectilePrefab: {fileID: 4086896095635399503, guid: c0ab77aca05fef64383450a4d064e5b0, type: 3}
