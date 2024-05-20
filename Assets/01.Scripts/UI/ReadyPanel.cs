@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
@@ -7,6 +8,10 @@ using UnityEngine.UI;
 
 public class ReadyPanel : NetworkBehaviour
 {
+    #region only debug
+    [SerializeField] private CharSelectPanel _characterPanel;
+    #endregion
+
     [SerializeField] private TMP_InputField _tmpNameInput;
     [SerializeField] private Button _readyBtn, _startBtn;
 
@@ -88,5 +93,23 @@ public class ReadyPanel : NetworkBehaviour
             _startBtn.interactable = false;
         }
     }
+    #endregion
+
+
+    #region Test region
+
+    public async void SetReadyWithNameAndCharacter(int index, string name)
+    {
+        _characterPanel.SelectPlayer(index);
+        await Task.Delay(200); // 200ms 기다려서 동기화시키고 
+        _tmpNameInput.text = name;
+        HandleReadyBtnClick();
+    }
+
+    public void StartGameWithHost()
+    {
+        HandleGameStartClick();
+    }
+
     #endregion
 }

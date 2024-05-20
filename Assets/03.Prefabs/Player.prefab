@@ -453,7 +453,7 @@ GameObject:
   - component: {fileID: 4741536273201214649}
   - component: {fileID: 5728045872154682639}
   - component: {fileID: 4080842526683572441}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -633,7 +633,8 @@ MonoBehaviour:
   _groundCheckerSize: {x: 0.35, y: 0.2}
   _whatIsGround:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
+  isKnockBack: 0
 --- !u!114 &5728045872154682639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -722,6 +723,7 @@ MonoBehaviour:
         byte0061: 0
   isReady:
     m_InternalValue: 0
+  knockBackPower: {x: 0, y: 0}
 --- !u!114 &4080842526683572441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -734,6 +736,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45f4cb73450b830468b3d2bc39d2ec0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentHealth:
+    m_InternalValue: 0
 --- !u!1 &6997137993607601928
 GameObject:
   m_ObjectHideFlags: 0
@@ -968,4 +972,3 @@ MonoBehaviour:
   _arrowParentTrm: {fileID: 2086588664909816268}
   _arrowSprite: {fileID: 4622662956867798993}
   _firePosTrm: {fileID: 1783903261635560206}
-  _chargeSpeed: 5

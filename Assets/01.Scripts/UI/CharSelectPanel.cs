@@ -28,5 +28,10 @@ public class CharSelectPanel : MonoBehaviour
         _infoText.text = ui.DataSO.GetInfoString();
     }
 
-
+    #region only debug
+    public void SelectPlayer(int index)
+    {
+        _btnList[index].HandleCharacterSelect();
+    }
+    #endregion
 }

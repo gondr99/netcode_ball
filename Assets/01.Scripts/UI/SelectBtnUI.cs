@@ -22,7 +22,7 @@ public class SelectBtnUI : MonoBehaviour
         selectImage = transform.Find("SelectFrame").GetComponent<Image>();
     }
 
-    private void HandleCharacterSelect()
+    public void HandleCharacterSelect()
     {
         //Player status is ready! so fixed
         if (GameManager.Instance.ActivePlayer.isReady.Value) return;

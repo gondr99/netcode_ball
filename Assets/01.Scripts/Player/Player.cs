@@ -39,6 +39,7 @@ public class Player : NetworkBehaviour
     private SpriteLibrary _spriteLib;
     private Transform _visualTrm;
 
+    public PlayerTeamInfo teamInfo;
 
     private void Awake()
     {
@@ -157,6 +158,27 @@ public class Player : NetworkBehaviour
     public void SelectCharacterServerRpc(int index)
     {
         GameManager.Instance.SelectCharacter(index, OwnerClientId);
+    }
+
+    #region ServerOnly
+    public void MoveToPosition(Vector3 position)
+    {
+        //only send to owner
+        ClientRpcParams sendParam = new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new ulong[] { OwnerClientId }
+            }
+        };
+        MoveToPositionClientRpc(position, sendParam); //오너에게만 전송
+    }
+    #endregion
+
+    [ClientRpc]
+    public void MoveToPositionClientRpc(Vector3 position, ClientRpcParams param)
+    {
+        transform.position = position;
     }
 }
 

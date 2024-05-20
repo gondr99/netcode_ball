@@ -1,4 +1,5 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -65,7 +66,6 @@ public class PlayerMovement : MonoBehaviour
         else
             RbCompo.velocity = new Vector2(0, RbCompo.velocity.y);
     }
-    
 
     private void OnDrawGizmosSelected()
     {

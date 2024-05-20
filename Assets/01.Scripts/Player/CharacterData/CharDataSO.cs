@@ -17,6 +17,7 @@ public class CharDataSO : ScriptableObject
 
     public int damage = 10;
     public float throwPower = 10;
+    public float chargeSpeed = 10;
     public Projectile projectilePrefab;
 
     public int maxHealth = 80;

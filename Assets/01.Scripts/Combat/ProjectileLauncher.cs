@@ -8,7 +8,6 @@ public class ProjectileLauncher : NetworkBehaviour
     [SerializeField] private Transform _arrowParentTrm;
     [SerializeField] private SpriteRenderer _arrowSprite;
     [SerializeField] private Transform _firePosTrm;
-    [SerializeField] private float _chargeSpeed = 5f;
 
     private Player _player;
     private bool _isCharging = false;
@@ -84,7 +83,7 @@ public class ProjectileLauncher : NetworkBehaviour
         CharDataSO data = _player.Data;
         if (_isCharging)
         {
-            _currentPower += _chargeSpeed * Time.deltaTime;
+            _currentPower += _player.Data.chargeSpeed * Time.deltaTime;
             _currentPower = Mathf.Clamp(_currentPower, 0, data.throwPower);
         }
 

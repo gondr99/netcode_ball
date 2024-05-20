@@ -36,11 +36,14 @@ public class GameManager : MonoSingleton<GameManager>
     private void Awake()
     {
         playerDictionary = new Dictionary<ulong, Player>();
+        if (NetworkManager.Singleton == null) return;
+
         NetworkManager.Singleton.SceneManager.OnLoadComplete += HandleSceneLoadComplete;
     }
 
     private void OnDestroy()
     {
+        if (NetworkManager.Singleton == null) return;
         NetworkManager.Singleton.SceneManager.OnLoadComplete -= HandleSceneLoadComplete;
     }
 
@@ -72,6 +75,11 @@ public class GameManager : MonoSingleton<GameManager>
         data.playerName = userName;
         AppHost.Instance.NetServer.SetUserData(clientID, data);
 
+        return IsAllReady();
+    }
+
+    public bool IsAllReady()
+    {
         return playerDictionary.Count == 2
             && playerDictionary.Values.Any(p => p.isReady.Value == false) == false;
     }
@@ -95,15 +103,18 @@ public class GameManager : MonoSingleton<GameManager>
     public void MovePlayerInGameScene()
     {
         GameSpawnPoints SpawnPoints = GameObject.FindObjectOfType<GameSpawnPoints>();
-        Vector3[] positions = SpawnPoints.GetPositions();
+        PlayerTeamInfo[] infos = SpawnPoints.GetPositions();
         int index = 0;
         foreach(Player p in playerDictionary.Values)
         {
             p.HealthCompo.ResetHealth();
-            p.transform.position = positions[index];
+            p.teamInfo = infos[index];
+            p.MoveToPosition(infos[index].originPos);
             index++;
         }
 
+        //여기 온건 씬 로딩이 끝난 상태라 Awake까지 모두 종료된 상태. 따라서 싱글톤 사용가능
+        BallManager.Instance.GenerateBallInCountDown(5);
     }
 
     public void GoToSelectScene()
