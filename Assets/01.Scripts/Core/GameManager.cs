@@ -6,15 +6,22 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoSingleton<GameManager>
+public class GameManager : NetMonoSingleton<GameManager>
 {
     [SerializeField] private Transform _selectSceneSpawnPosition;
     [SerializeField] private Player _playerPrefab;
     [SerializeField] private CharDataListSO _charDataList;
+    [SerializeField] private int _winScore = 5;
 
     public List<CharDataSO> CharList => _charDataList.list;
 
     public event Action<Player> OnActivePlayerSetEvent;
+    
+    public NetworkVariable<int> blueScore;
+    public NetworkVariable<int> redScore;
+
+    public event Action<string> OnGameOverEvent;
+    public bool isGameEnd = false;
 
     private Player _activePlayer;//currently active player object
     public Player ActivePlayer
@@ -30,22 +37,32 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    #region Only Server
     public Dictionary<ulong, Player> playerDictionary;
 
     private void Awake()
     {
+        
         playerDictionary = new Dictionary<ulong, Player>();
         if (NetworkManager.Singleton == null) return;
+        blueScore = new NetworkVariable<int>(0);
+        redScore = new NetworkVariable<int>(0);
 
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        DontDestroyOnLoad(gameObject);
+        if (!IsHost) return;
         NetworkManager.Singleton.SceneManager.OnLoadComplete += HandleSceneLoadComplete;
     }
 
-    private void OnDestroy()
+    public override void OnNetworkDespawn()
     {
-        if (NetworkManager.Singleton == null) return;
+        if (!IsHost) return;
         NetworkManager.Singleton.SceneManager.OnLoadComplete -= HandleSceneLoadComplete;
     }
+
+    #region Only Server
 
     public void SpawnPlayerInSelectScene(ulong clientID)
     {
@@ -87,7 +104,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void StartGame()
     {
-        DontDestroyOnLoad(gameObject);
+        
         NetworkManager.Singleton.SceneManager.LoadScene(SceneNames.Game, UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
 
@@ -96,12 +113,21 @@ public class GameManager : MonoSingleton<GameManager>
         ulong serverID = NetworkManager.Singleton.LocalClientId;
         if (sceneName == SceneNames.Game && clientId == serverID)
         {
-            MovePlayerInGameScene();
+            ResetGame();
         }
+    }
+
+    private void ResetGame()
+    {
+        blueScore.Value = 0;
+        redScore.Value = 0;
+        isGameEnd = false;
+        MovePlayerInGameScene();
     }
 
     public void MovePlayerInGameScene()
     {
+        //if gamescene load complete!
         GameSpawnPoints SpawnPoints = GameObject.FindObjectOfType<GameSpawnPoints>();
         PlayerTeamInfo[] infos = SpawnPoints.GetPositions();
         int index = 0;
@@ -112,9 +138,41 @@ public class GameManager : MonoSingleton<GameManager>
             p.MoveToPosition(infos[index].originPos);
             index++;
         }
-
+        BallManager.Instance.OnScoreEvent += HandleScoreEvent;
         //여기 온건 씬 로딩이 끝난 상태라 Awake까지 모두 종료된 상태. 따라서 싱글톤 사용가능
+
+        
         BallManager.Instance.GenerateBallInCountDown(5);
+    }
+
+    private void HandleScoreEvent(Team team)
+    {
+        if (team == Team.Blue)
+            blueScore.Value++;
+        else if (team == Team.Red)
+            redScore.Value++;
+
+        CheckWinCondition();
+    }
+
+    private void CheckWinCondition()
+    {
+        if(blueScore.Value >= _winScore)
+        {
+            isGameEnd = true;
+            SetGameEndClientRpc("Blue team win!");
+        }
+        else if(redScore.Value >= _winScore)
+        {
+            isGameEnd = true;
+            SetGameEndClientRpc("Red team win!");
+        }
+    }
+
+    [ClientRpc]
+    public void SetGameEndClientRpc(string msg)
+    {
+        OnGameOverEvent?.Invoke(msg);
     }
 
     public void GoToSelectScene()
@@ -131,4 +189,18 @@ public class GameManager : MonoSingleton<GameManager>
         return CharList[index];
     }
 
+    public void GoToMenuScene()
+    {
+        if(IsHost)
+        {
+            AppHost.Instance.ShutDownHost();
+            SceneManager.LoadScene(SceneNames.MenuScene);
+        }
+        else
+        {
+            AppClient.Instance.Disconnect();
+        }
+        IsDestoryed = true;
+        Destroy(gameObject);
+    }
 }

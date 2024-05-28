@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class BallManager : NetworkBehaviour
 
     [SerializeField] private Ball _ballPrefab;
     [SerializeField] private GameSpawnPoints _spawnPoints;
+    public event Action<Team> OnScoreEvent;
 
     private void Awake()
     {
@@ -15,11 +17,11 @@ public class BallManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void ShowTextMessageClientRpc(string msg)
+    public void ShowTextMessageClientRpc(string msg, float time = 1f)
     {
-        Debug.Log(msg);
+        MsgCanvas.Instance.ShowMsg(msg, time);
+        //Debug.Log(msg);
     }
-
 
     #region server only
     public void GenerateBallInCountDown(int count)
@@ -52,14 +54,18 @@ public class BallManager : NetworkBehaviour
     {
         if(hitGroundOwner == Team.Red)
         {
-            ShowTextMessageClientRpc("Blue Team : 1 Point!");
+            ShowTextMessageClientRpc("Blue Team : 1 Point!", 2f);
+            OnScoreEvent?.Invoke(Team.Blue);
         }
         else
         {
-            ShowTextMessageClientRpc("Red Team : 1 Point!");
+            ShowTextMessageClientRpc("Red Team : 1 Point!", 2f);
+            OnScoreEvent?.Invoke(Team.Red);
         }
+
         Destroy(ball.gameObject);
-        GenerateBallInCountDown(5);
+        if(!GameManager.Instance.isGameEnd)
+            GenerateBallInCountDown(5);
     }
     #endregion
 }

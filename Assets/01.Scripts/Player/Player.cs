@@ -37,7 +37,7 @@ public class Player : NetworkBehaviour
     [HideInInspector] public Vector2 knockBackPower;
 
     private SpriteLibrary _spriteLib;
-    private Transform _visualTrm;
+    public Transform visualTrm;
 
     public PlayerTeamInfo teamInfo;
 
@@ -53,9 +53,9 @@ public class Player : NetworkBehaviour
         ColliderCompo = GetComponent<Collider2D>();
         HealthCompo = GetComponent<Health>();
 
-        _visualTrm = transform.Find("Visual");
-        AnimCompo = _visualTrm.GetComponent<Animator>();
-        _spriteLib = _visualTrm.GetComponent<SpriteLibrary>();
+        visualTrm = transform.Find("Visual");
+        AnimCompo = visualTrm.GetComponent<Animator>();
+        _spriteLib = visualTrm.GetComponent<SpriteLibrary>();
 
         LauncherCompo = transform.Find("ArrowParent").GetComponent<ProjectileLauncher>();
         LauncherCompo.Initialize(this);
@@ -125,18 +125,18 @@ public class Player : NetworkBehaviour
     #region Flip Character
     public bool IsFacingRight()
     {
-        return Mathf.Approximately(_visualTrm.eulerAngles.y, 0);
+        return Mathf.Approximately(visualTrm.eulerAngles.y, 0);
     }
 
     public void HandleSpriteFlip(Vector3 targetPosition)
     {
         if (targetPosition.x < transform.position.x)
         {
-            _visualTrm.eulerAngles = new Vector3(0f, -180f, 0f);
+            visualTrm.eulerAngles = new Vector3(0f, -180f, 0f);
         }
         else
         {
-            _visualTrm.eulerAngles = new Vector3(0f, 0f, 0f);
+            visualTrm.eulerAngles = new Vector3(0f, 0f, 0f);
         }
     }
     #endregion
